@@ -1,0 +1,92 @@
+package com.example.bai2;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    Button btnStringAndInt, btnSendString, btnSendInt;
+    TextView editTextName, editTextInt;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        btnStringAndInt=findViewById(R.id.btnsend_String_Int);
+        btnSendString=findViewById(R.id.btnsendString);
+        btnSendInt=findViewById(R.id.btnsendInt);
+        editTextInt=findViewById(R.id.editTextInt);
+        editTextName=findViewById(R.id.editTextName);
+
+        btnSendString.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = editTextName.getText().toString();
+
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(MainActivity.this, "Vui lòng nhập tên", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Tạo Intent chuyển sang StringActivity
+                Intent intent = new Intent(MainActivity.this, StringActivity.class);
+                intent.putExtra("name", name); // Gửi dữ liệu
+                startActivity(intent); // Mở activity
+            }
+        });
+
+        btnSendInt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String numberText = editTextInt.getText().toString(); // ✅ lấy đúng ô nhập số
+
+                if (TextUtils.isEmpty(numberText)) {
+                    Toast.makeText(MainActivity.this, "Vui lòng nhập số thứ tự", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                try {
+                    int number = Integer.parseInt(numberText); // ✅ chuyển String → int
+
+                    Intent intent = new Intent(MainActivity.this, IntActivity.class);
+                    intent.putExtra("number", number); // ✅ gửi kiểu int
+                    startActivity(intent);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(MainActivity.this, "Vui lòng nhập đúng định dạng số!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btnStringAndInt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = editTextName.getText().toString();
+                String numberText = editTextInt.getText().toString();
+
+                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(numberText)) {
+                    Toast.makeText(MainActivity.this, "Vui lòng nhập cả tên và số", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                try {
+                    int number = Integer.parseInt(numberText);
+
+                    // ✅ Gộp dữ liệu vào cùng 1 Intent
+                    Intent intent = new Intent(MainActivity.this, StringAndIntActivity.class);
+                    intent.putExtra("name", name);
+                    intent.putExtra("number", number);
+                    startActivity(intent);
+
+                } catch (NumberFormatException e) {
+                    Toast.makeText(MainActivity.this, "Vui lòng nhập đúng định dạng số!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+}
